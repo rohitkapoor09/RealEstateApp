@@ -1,6 +1,9 @@
 package com.realestateapp
 
 import android.app.Application
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.os.Build
 import com.facebook.react.PackageList
 import com.facebook.react.ReactApplication
 import com.facebook.react.ReactHost
@@ -38,6 +41,21 @@ class MainApplication : Application(), ReactApplication {
     if (BuildConfig.IS_NEW_ARCHITECTURE_ENABLED) {
       // If you opted-in for the New Architecture, we load the native entry point for this app.
       load()
+    }
+    createNotificationChannel() // Create the notification channel
+  }
+
+  private fun createNotificationChannel() {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+      val channelId = "0123456789"
+      val channelName = "RealEstateAppChannel"
+      val channelDescription = "Real Estate App"
+      val importance = NotificationManager.IMPORTANCE_DEFAULT
+      val channel = NotificationChannel(channelId, channelName, importance).apply {
+        description = channelDescription
+      }
+      val notificationManager: NotificationManager = getSystemService(NotificationManager::class.java)
+      notificationManager.createNotificationChannel(channel)
     }
   }
 }
