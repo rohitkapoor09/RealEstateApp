@@ -95,9 +95,9 @@ const HomeDetailsScreen = ({ route, navigation }) => {
       <Text style={styles.homeAddress}>{home.address}</Text>
       <Text style={styles.homeDescription}>{home.description}</Text>
       <View style={styles.buttonContainer}>
-        <TouchableOpacity onPress={(isHomeUnlocked(home.id) || isLoading) ? null : handleUnlock} style={[styles.button, isHomeUnlocked(home.id) && styles.buttonDisabled]}>
+        {isNearby && <TouchableOpacity onPress={(isHomeUnlocked(home.id) || isLoading) ? null : handleUnlock} style={[styles.button, isHomeUnlocked(home.id) && styles.buttonDisabled]}>
           {isLoading ? <ActivityIndicator color={'#fff'} size={30} style={styles.loader}/>:<Text style={styles.buttonTitle}>{isHomeUnlocked(home.id) ? 'Unlocked' : 'Unlock Now'}</Text>}
-        </TouchableOpacity>
+        </TouchableOpacity>}
       <TouchableOpacity onPress={handleGoToUnlockedHomes} style={styles.button}>
         <Text style={styles.buttonTitle}>Go to Unlocked Homes</Text>
       </TouchableOpacity>

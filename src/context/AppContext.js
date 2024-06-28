@@ -8,7 +8,6 @@ export const AppProvider = ({ children }) => {
   const unlockHome = (homeId, isNearby) => {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
-        // const success = isNearby
         if (isNearby) {
           setUnlockedHomeIds(prevIds => [...prevIds, homeId]);
           resolve('Home unlocked successfully');
