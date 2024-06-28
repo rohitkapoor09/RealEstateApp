@@ -78,14 +78,15 @@ const styles = StyleSheet.create({
   },
   bottomText: {
     color: '#000',
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: 'bold',
     textAlign: 'left',
     marginTop: 20,
   },
   bottomSubText: {
     color: 'gray',
-    fontSize: 14,
+    fontSize: 16,
+    lineHeight:20,
     fontWeight: '400',
     textAlign: 'left',
     marginTop: 10,
@@ -103,7 +104,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     textAlign: 'center',
-    fontSize: 12,
+    fontSize: 14,
     color: '#ffffff',
   },
 });

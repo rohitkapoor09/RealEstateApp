@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
 import { AppContext } from '../context/AppContext';
 import { check, request, PERMISSIONS, RESULTS } from 'react-native-permissions';
 import Geolocation from '@react-native-community/geolocation';
@@ -9,6 +9,7 @@ const HomeDetailsScreen = ({ route, navigation }) => {
   const { home } = route.params;
   const { unlockHome, isHomeUnlocked } = useContext(AppContext);
   const [isNearby, setIsNearby] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const requestLocationPermission = async () => {
@@ -28,6 +29,7 @@ const HomeDetailsScreen = ({ route, navigation }) => {
     };
 
     const getCurrentLocation = () => {
+      setIsLoading(true)
       Geolocation.getCurrentPosition(
         (position) => {
           const distance = calculateDistance(
@@ -36,10 +38,12 @@ const HomeDetailsScreen = ({ route, navigation }) => {
             home.latitude,
             home.longitude
           );
-          setIsNearby(distance <= 30000);
+          setIsNearby(distance <= 30);
+          setIsLoading(false)
         },
         (error) => {
           Alert.alert('Error', 'Failed to get current location.');
+          setIsLoading(false)
         },
         { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
       );
@@ -65,8 +69,10 @@ const HomeDetailsScreen = ({ route, navigation }) => {
   };
 
   const handleUnlock = async () => {
+    setIsLoading(true)
     try {
-      const message = await unlockHome(home.id, isNearby); // Pass home id to unlockHome function
+      const message = await unlockHome(home.id, isNearby); // Pass home id and isNearby to unlockHome function
+      setIsLoading(false)
       Alert.alert('Success', message);
       PushNotification.localNotification({
         channelId: "0123456789", 
@@ -74,6 +80,7 @@ const HomeDetailsScreen = ({ route, navigation }) => {
         message: 'Your home has been successfully unlocked!',
       });
     } catch (error) {
+      setIsLoading(false)
       Alert.alert('Error', error);
     }
   };
@@ -88,13 +95,14 @@ const HomeDetailsScreen = ({ route, navigation }) => {
       <Text style={styles.homeAddress}>{home.address}</Text>
       <Text style={styles.homeDescription}>{home.description}</Text>
       <View style={styles.buttonContainer}>
-        <TouchableOpacity onPress={isHomeUnlocked(home.id) ? null : handleUnlock} style={[styles.button, isHomeUnlocked(home.id) && styles.buttonDisabled]}>
-          <Text style={styles.buttonTitle}>{isHomeUnlocked(home.id) ? 'Unlocked' : 'Unlock Now'}</Text>
+        <TouchableOpacity onPress={(isHomeUnlocked(home.id) || isLoading) ? null : handleUnlock} style={[styles.button, isHomeUnlocked(home.id) && styles.buttonDisabled]}>
+          {isLoading ? <ActivityIndicator color={'#fff'} size={30} style={styles.loader}/>:<Text style={styles.buttonTitle}>{isHomeUnlocked(home.id) ? 'Unlocked' : 'Unlock Now'}</Text>}
         </TouchableOpacity>
       <TouchableOpacity onPress={handleGoToUnlockedHomes} style={styles.button}>
         <Text style={styles.buttonTitle}>Go to Unlocked Homes</Text>
       </TouchableOpacity>
       </View>
+      {isLoading && <Text style={styles.homeDescription}>{'Please wait while we are fetching location.'}</Text>}
     </View>
   );
 };
@@ -140,6 +148,9 @@ const styles = StyleSheet.create({
   buttonContainer:{
     flexDirection:'row',
     justifyContent:'space-around'
+  },
+  loader:{
+    paddingHorizontal:30
   }
 });
 

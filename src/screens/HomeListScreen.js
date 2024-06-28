@@ -102,6 +102,24 @@ const HomeListScreen = ({navigation}) => {
       latitude: 28.5417,
       longitude: 77.2432,
     },
+    {
+      id: '11',
+      address: 'Sector 51 Noida',
+      image:
+        'https://images.pexels.com/photos/259588/pexels-photo-259588.jpeg?cs=srgb&dl=pexels-pixabay-259588.jpg&fm=jpg',
+      description: 'Rustic cabin retreat nestled in the mountains.',
+      latitude: 28.5840, 
+      longitude: 77.3752,
+    },
+    {
+      id: '12',
+      address: 'Unitech Cyber Park',
+      image:
+        'https://images.pexels.com/photos/259588/pexels-photo-259588.jpeg?cs=srgb&dl=pexels-pixabay-259588.jpg&fm=jpg',
+      description: 'A Beautiful Property to stay in gurugram',
+      latitude: 28.4439,
+      longitude:  77.0567,
+    },
   ];
 
   const navigateToDetails = home => {
